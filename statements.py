@@ -61,6 +61,13 @@ for year in range(years):
     liabilities.append(revenue[year] * 0.4)  # Assume 40% of revenue as liabilities
     equity.append(assets[year] - liabilities[year])
 
+# Ratio Calculations
+gross_margin = [(gp / rev) * 100 for gp, rev in zip(gross_profit, revenue)]
+operating_margin = [(eb / rev) * 100 for eb, rev in zip(ebit, revenue)]
+net_profit_margin = [(ni / rev) * 100 for ni, rev in zip(net_income, revenue)]
+return_on_assets = [(ni / a) * 100 for ni, a in zip(net_income, assets)]
+return_on_equity = [(ni / eq) * 100 for ni, eq in zip(net_income, equity)]
+
 # Convert lists to Pandas DataFrame for better presentation
 years_list = [f"Year {i+1}" for i in range(years)]
 
@@ -89,7 +96,16 @@ balance_sheet = pd.DataFrame({
     "Equity": equity
 }).round(2)
 
-# Display Financial Statements
+ratios = pd.DataFrame({
+    "Year": years_list,
+    "Gross Margin (%)": gross_margin,
+    "Operating Margin (%)": operating_margin,
+    "Net Profit Margin (%)": net_profit_margin,
+    "Return on Assets (ROA) (%)": return_on_assets,
+    "Return on Equity (ROE) (%)": return_on_equity
+}).round(2)
+
+# Display Financial Statements and Ratios
 st.subheader("Income Statement")
 st.write(income_statement)
 
@@ -99,8 +115,12 @@ st.write(cash_flow_statement)
 st.subheader("Balance Sheet")
 st.write(balance_sheet)
 
+st.subheader("Financial Ratios")
+st.write(ratios)
+
 st.subheader("Net Cash Flow Over Years")
 st.line_chart(cash_flow)
+
 st.info("""
 **Disclaimer:**
 
@@ -110,18 +130,11 @@ This financial model is provided for informational purposes only and is intended
 1. **Revenue Growth:** The model assumes a constant annual revenue growth rate, as specified by the user. The default rate is set to 10% per annum.
 2. **Initial Revenue:** The starting revenue amount is input by the user, with a default value of $100,000. This amount grows according to the specified revenue growth rate.
 3. **Cost of Goods Sold (COGS):** COGS is assumed to be a fixed percentage of revenue, adjustable by the user. The default percentage is set to 40%.
-4. **Operating Expenses (OPEX):** Operating expenses are also assumed to be a fixed percentage of revenue. The default setting is 20%.
-5. **Tax Rate:** The tax rate applied to EBIT (Earnings Before Interest and Taxes) is user-defined, with a default rate of 25%.
-6. **Capital Expenditures (CAPEX):** The model assumes a constant annual capital expenditure amount, input by the user. The default value is $5,000 per year.
-7. **Depreciation and Amortization:** The model includes a constant annual depreciation and amortization expense, with a default value of $5,000.
-8. **Net Working Capital (NWC):** The change in net working capital is assumed to be constant each year, with a default value of $500.
-9. **Liabilities:** Liabilities are assumed to be 40% of revenue each year, a static assumption embedded in the model.
-10. **Equity:** Equity is calculated as the difference between assets and liabilities, with assets accruing based on the cash flow, depreciation, and capital expenditures.
-
-### General Notes:
-- **Static Assumptions:** Many of the variables are assumed to be constant over the five-year period, which may not reflect the real-world variability of these factors.
-- **Simplified Calculations:** This model uses simplified formulas and may omit more complex elements of financial modeling, such as financing, interest, dividends, or variations in tax laws.
-- **User Responsibility:** Users are responsible for inputting accurate data and for understanding the implications of these assumptions on the generated financial statements.
-
-The outputs of this model should be reviewed with caution and should not be used as the sole basis for financial decisions. For comprehensive financial planning, consultation with a financial advisor or accountant is recommended.
+4. **Operating Expenses:** Operating expenses are also assumed to be a fixed percentage of revenue, with a default value of 20%.
+5. **Tax Rate:** The tax rate is assumed to be constant throughout the projection period, with a default value of 25%.
+6. **Capital Expenditures (Capex):** The annual capital expenditures are assumed to be constant, with a default value of $5,000.
+7. **Depreciation & Amortization:** The annual depreciation and amortization are also assumed to be constant, with a default value of $5,000.
+8. **Change in Net Working Capital (NWC):** The annual change in net working capital is assumed to be constant, with a default value of $500.
+9. **Liabilities:** Liabilities are assumed to be 40% of revenue each year.
+10. **Equity:** Equity is calculated as the difference between assets and liabilities.
 """)
