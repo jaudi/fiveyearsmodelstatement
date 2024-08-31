@@ -61,6 +61,12 @@ for year in range(years):
     liabilities.append(revenue[year] * 0.4)  # Assume 40% of revenue as liabilities
     equity.append(assets[year] - liabilities[year])
 
+# Growth Rate Calculations
+revenue_growth_rate = [0] + [(revenue[i] / revenue[i-1] - 1) * 100 for i in range(1, years)]
+gross_profit_growth_rate = [0] + [(gross_profit[i] / gross_profit[i-1] - 1) * 100 for i in range(1, years)]
+ebit_growth_rate = [0] + [(ebit[i] / ebit[i-1] - 1) * 100 for i in range(1, years)]
+net_income_growth_rate = [0] + [(net_income[i] / net_income[i-1] - 1) * 100 for i in range(1, years)]
+
 # Ratio Calculations
 gross_margin = [(gp / rev) * 100 for gp, rev in zip(gross_profit, revenue)]
 operating_margin = [(eb / rev) * 100 for eb, rev in zip(ebit, revenue)]
@@ -74,12 +80,16 @@ years_list = [f"Year {i+1}" for i in range(years)]
 income_statement = pd.DataFrame({
     "Year": years_list,
     "Revenue": revenue,
+    "Revenue Growth Rate (%)": revenue_growth_rate,
     "COGS": cogs,
     "Gross Profit": gross_profit,
+    "Gross Profit Growth Rate (%)": gross_profit_growth_rate,
     "Operating Expenses": opex,
     "EBIT": ebit,
+    "EBIT Growth Rate (%)": ebit_growth_rate,
     "Tax": tax,
-    "Net Income": net_income
+    "Net Income": net_income,
+    "Net Income Growth Rate (%)": net_income_growth_rate
 }).round(2)
 
 cash_flow_statement = pd.DataFrame({
